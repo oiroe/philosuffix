@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   meaw.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pboonpro <pboonpro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pboonpro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 15:24:05 by pboonpro          #+#    #+#             */
-/*   Updated: 2023/08/05 18:35:36 by pboonpro         ###   ########.fr       */
+/*   Updated: 2023/08/10 00:40:21 by pboonpro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,32 @@ int	setup(char **av, t_set *set, int ac)
 	return (1);
 }
 
-void	*routine(void *set)
+int	fork_init(t_set *set)
+{
+	int	i;
+
+	set->fork = malloc(sizeof(pthread_t) * set->log.num_phi);
+	if (!set->fork)
+		return (0);
+	i = 0;
+	while (i < set->log.num_phi)
+	{
+		if (pthread_mutex_init(&set->fork[i], NULL) != 0)
+		{
+			while (i >= 0)
+				pthread_mutex_destroy(&set->fork[i--]);
+			free(set->fork);
+			return (0);
+		}
+		i++;
+	}
+	return (1);
+}
+
+/*void	*routine(void *set)
 {
 	return (NULL);
-}
+}*/
 
 int	main(int ac, char **av)
 {
@@ -87,6 +109,7 @@ int	main(int ac, char **av)
 		return (error_h());
 	if (!setup(av, &set, ac))
 		return (error_h());
-	//if (!setup)
+	if (!fork_init(&set))
+		return (error_h());
 	return (0);
 }
