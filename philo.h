@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pboonpro <pboonpro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pboonpro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 18:32:22 by pboonpro          #+#    #+#             */
-/*   Updated: 2023/08/05 18:32:58 by pboonpro         ###   ########.fr       */
+/*   Updated: 2023/08/15 02:19:16 by pboonpro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 # include <pthread.h>
 # include <stdio.h>
 # include <stdlib.h>
-# include <string.h>
 # include <unistd.h>
 # include <stdbool.h>
+# include <sys/time.h>
 
 typedef struct s_log
 {
@@ -33,6 +33,7 @@ typedef struct s_philo
 {
 	pthread_t	th;
 	int			phi_index;
+	int			last_eat;
 	int			r_fork;
 	int			l_fork;
 	int			count_eat;
@@ -47,5 +48,6 @@ typedef struct s_set
 }	t_set;
 
 int		ft_atoi(const char *str);
+long	get_time(void);
 
 #endif

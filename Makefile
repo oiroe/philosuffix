@@ -3,20 +3,20 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pboonpro <pboonpro@student.42.fr>          +#+  +:+       +#+         #
+#    By: pboonpro <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/05 18:10:53 by pboonpro          #+#    #+#              #
-#    Updated: 2023/08/05 18:17:48 by pboonpro         ###   ########.fr        #
+#    Updated: 2023/08/15 01:45:57 by pboonpro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
 
-SRC = meaw.c util.c\
+SRC = meaw.c util.c time.c\
 
 OBJ = $(SRC:%.c=%.o)
 
-CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=thread #-fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g -pthread #-fsanitize=thread #-fsanitize=address
 
 CC = cc
 

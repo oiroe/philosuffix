@@ -6,7 +6,7 @@
 /*   By: pboonpro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 15:24:05 by pboonpro          #+#    #+#             */
-/*   Updated: 2023/08/10 00:40:21 by pboonpro         ###   ########.fr       */
+/*   Updated: 2023/08/15 02:19:30 by pboonpro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,19 +40,19 @@ int	av_check(char **av, int ac)
 {
 	size_t	i;
 	int		j;
-	char	*temp;
 
 	j = 1;
 	while (j < ac)
 	{
-		temp = av[j];
 		i = 0;
-		while (i < ft_strlen(temp))
+		while (av[j][i])
 		{
-			if (!ft_isdigit(temp[i]))
+			if (!ft_isdigit(av[j][i]))
 				return (0);
 			i++;
 		}
+		if (ft_atoi(av[j]) == 0)
+			return (0);
 		j++;
 	}
 	return (1);
@@ -96,6 +96,32 @@ int	fork_init(t_set *set)
 	return (1);
 }
 
+int	philo_init(t_set *set)
+{
+	int	i;
+
+	set->philo = malloc(sizeof(t_philo) * set->log.num_phi);
+	if (!set->philo)
+		return (0);
+	i = 0;
+	while (i < set->log.num_phi)
+	{
+		set->philo[i].th = 0;
+		set->philo[i].phi_index = i;
+		set->philo[i].last_eat = 0;
+		set->philo[i].r_fork = (i + 1) % set->log.num_phi;
+		set->philo[i].l_fork = i;
+		set->philo[i].count_eat = 0;
+		i++;
+	}
+	return (1);
+}
+
+/*void	death_check(t_set *set)
+{
+	return ;
+}*/
+
 /*void	*routine(void *set)
 {
 	return (NULL);
@@ -110,6 +136,8 @@ int	main(int ac, char **av)
 	if (!setup(av, &set, ac))
 		return (error_h());
 	if (!fork_init(&set))
+		return (error_h());
+	if (!philo_init(&set))
 		return (error_h());
 	return (0);
 }
