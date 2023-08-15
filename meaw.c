@@ -3,38 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   meaw.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pboonpro <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: pboonpro <pboonpro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 15:24:05 by pboonpro          #+#    #+#             */
-/*   Updated: 2023/08/15 02:19:30 by pboonpro         ###   ########.fr       */
+/*   Updated: 2023/08/16 02:05:49 by pboonpro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-int	error_h(void)
-{
-	printf("Error\n");
-	return (0);
-}
-
-int	ft_isdigit(int c)
-{
-	if (c >= '0' && c <= '9')
-		return (1);
-	else
-		return (0);
-}
-
-size_t	ft_strlen(const char *s)
-{
-	size_t		i;
-
-	i = 0;
-	while (s[i] != '\0')
-		i++;
-	return (i);
-}
 
 int	av_check(char **av, int ac)
 {
@@ -112,15 +88,39 @@ int	philo_init(t_set *set)
 		set->philo[i].r_fork = (i + 1) % set->log.num_phi;
 		set->philo[i].l_fork = i;
 		set->philo[i].count_eat = 0;
+		set->philo[i].finish = 0;
 		i++;
 	}
 	return (1);
 }
 
-/*void	death_check(t_set *set)
+void	stop_check(t_set *set)
 {
+	int	i;
+	int	philo_full;
+
+	i = 0;
+	philo_full = 0;
+	while (!set->death && philo_full != set->phi_index)
+	{
+		if (set->philo[i].count_eat != set->log.max_eat \\
+			&& set->log.max_eat != -1 && !set->philo[i].finish)
+		{
+			philo_full++;
+			set->philo[i].finish = 1;
+		}
+		if (now(set->philo[i].last_eat) >= set->log.time_to_die)
+		{
+			set->death = 1;
+			printf("YOU DIE\n");
+			return ;-
+		}
+		i++;
+		i = i % set->log.num_phi;
+		usleep(44);
+	}
 	return ;
-}*/
+}
 
 /*void	*routine(void *set)
 {

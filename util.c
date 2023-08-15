@@ -6,11 +6,35 @@
 /*   By: pboonpro <pboonpro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 18:56:38 by pboonpro          #+#    #+#             */
-/*   Updated: 2023/08/04 18:57:19 by pboonpro         ###   ########.fr       */
+/*   Updated: 2023/08/16 00:50:36 by pboonpro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+int	error_h(void)
+{
+	printf("Error\n");
+	return (0);
+}
+
+int	ft_isdigit(int c)
+{
+	if (c >= '0' && c <= '9')
+		return (1);
+	else
+		return (0);
+}
+
+size_t	ft_strlen(const char *s)
+{
+	size_t		i;
+
+	i = 0;
+	while (s[i] != '\0')
+		i++;
+	return (i);
+}
 
 int	checkmaxmin(int sum, int count, int sign)
 {

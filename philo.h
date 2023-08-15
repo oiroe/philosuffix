@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pboonpro <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: pboonpro <pboonpro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 18:32:22 by pboonpro          #+#    #+#             */
-/*   Updated: 2023/08/15 02:19:16 by pboonpro         ###   ########.fr       */
+/*   Updated: 2023/08/16 00:59:45 by pboonpro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef struct s_philo
 	int			r_fork;
 	int			l_fork;
 	int			count_eat;
+	int			finish;
 }	t_philo;
 
 typedef struct s_set
@@ -49,5 +50,8 @@ typedef struct s_set
 
 int		ft_atoi(const char *str);
 long	get_time(void);
+int		error_h(void);
+int		ft_isdigit(int c);
+size_t	ft_strlen(const char *s);
 
 #endif
