@@ -6,7 +6,7 @@
 /*   By: pboonpro <pboonpro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 15:24:05 by pboonpro          #+#    #+#             */
-/*   Updated: 2023/08/16 02:05:49 by pboonpro         ###   ########.fr       */
+/*   Updated: 2023/08/17 01:40:03 by pboonpro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ int	setup(char **av, t_set *set, int ac)
 	if (!av_check(av, ac))
 		return (0);
 	set->death = 0;
+	set->id = 0;
 	set->log.num_phi = ft_atoi(av[1]);
 	set->log.time_to_die = ft_atoi(av[2]);
 	set->log.time_to_eat = ft_atoi(av[3]);
@@ -101,31 +102,82 @@ void	stop_check(t_set *set)
 
 	i = 0;
 	philo_full = 0;
-	while (!set->death && philo_full != set->phi_index)
+	while (!set->death && philo_full != set->log.num_phi)
 	{
-		if (set->philo[i].count_eat != set->log.max_eat \\
-			&& set->log.max_eat != -1 && !set->philo[i].finish)
+		if (set->philo[i].count_eat != set->log.max_eat \
+				&& set->log.max_eat != -1 && !set->philo[i].finish)
 		{
 			philo_full++;
 			set->philo[i].finish = 1;
 		}
-		if (now(set->philo[i].last_eat) >= set->log.time_to_die)
+		if (now(set->philo[i].last_eat) > set->log.time_to_die)
 		{
 			set->death = 1;
 			printf("YOU DIE\n");
-			return ;-
+			return ;
 		}
+		usleep(100);
 		i++;
 		i = i % set->log.num_phi;
-		usleep(44);
 	}
-	return ;
 }
 
-/*void	*routine(void *set)
+void	*routine(void *se)
 {
+	t_set	*set;
+	int		i;
+
+	set = (t_set *)se;
+	i = set->id;
+	set->philo[i].last_eat = set->start;
+	while (!set->death && (set->philo[i].count_eat <= set->log.max_eat \
+			|| set->log.max_eat == -1))
+	{
+		printf("%ld %d is thinking\n", now(set->start), i);
+		if (set->death || pthread_mutex_lock(&set->fork[set->philo[i].l_fork]))
+			return (NULL);
+		printf("%ld %d has taken a fork\n", now(set->start), i);
+		if (set->death || pthread_mutex_lock(&set->fork[set->philo[i].r_fork]))
+			return (NULL);
+		printf("%ld %d has taken a fork\n", now(set->start), i);
+		printf("%ld %d is eating\n", now(set->start), i);
+		set->philo[i].last_eat = get_time();
+		time_pass(set->log.time_to_eat, set);
+		if (set->death)
+			return (NULL);
+		if (set->death || pthread_mutex_unlock(&set->fork[set->philo[i].l_fork]))
+			return (NULL);
+		if (set->death || pthread_mutex_unlock(&set->fork[set->philo[i].r_fork]))
+			return (NULL);
+		set->philo[i].count_eat++;
+		if (set->philo[i].count_eat == set->log.max_eat)
+			return (NULL);
+		printf("%ld %d is sleeping\n", now(set->start), i);
+		time_pass(set->log.time_to_sleep, set);
+		if (set->death)
+			return (NULL);
+	}
 	return (NULL);
-}*/
+}
+
+int	start(t_set *set)
+{
+	int	i;
+
+	i = 0;
+	while (i < set->log.num_phi)
+	{
+		set->id = i;
+		set->start = get_time();
+		pthread_create(&set->philo[i].th, NULL, &routine, set);
+		pthread_detach(set->philo[i].th);
+		usleep(100);
+		i += 2;
+		if (i >= set->log.num_phi && i % 2 == 0)
+			i = 1;
+	}
+	return (1);
+}
 
 int	main(int ac, char **av)
 {
@@ -139,5 +191,7 @@ int	main(int ac, char **av)
 		return (error_h());
 	if (!philo_init(&set))
 		return (error_h());
+	start(&set);
+	stop_check(&set);
 	return (0);
 }

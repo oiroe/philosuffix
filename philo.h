@@ -6,7 +6,7 @@
 /*   By: pboonpro <pboonpro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 18:32:22 by pboonpro          #+#    #+#             */
-/*   Updated: 2023/08/16 00:59:45 by pboonpro         ###   ########.fr       */
+/*   Updated: 2023/08/16 23:22:14 by pboonpro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
-# include <stdbool.h>
 # include <sys/time.h>
 
 typedef struct s_log
@@ -33,7 +32,7 @@ typedef struct s_philo
 {
 	pthread_t	th;
 	int			phi_index;
-	int			last_eat;
+	long		last_eat;
 	int			r_fork;
 	int			l_fork;
 	int			count_eat;
@@ -42,7 +41,9 @@ typedef struct s_philo
 
 typedef struct s_set
 {
-	bool			death;
+	int				death;
+	int				id;
+	long			start;
 	t_log			log;
 	t_philo			*philo;
 	pthread_mutex_t	*fork;
@@ -53,5 +54,8 @@ long	get_time(void);
 int		error_h(void);
 int		ft_isdigit(int c);
 size_t	ft_strlen(const char *s);
+long	get_time(void);
+long	now(long past);
+void	time_pass(long time, t_set *set);
 
 #endif
