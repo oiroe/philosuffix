@@ -6,7 +6,7 @@
 /*   By: pboonpro <pboonpro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 15:24:05 by pboonpro          #+#    #+#             */
-/*   Updated: 2023/08/17 19:02:58 by pboonpro         ###   ########.fr       */
+/*   Updated: 2023/08/18 17:47:58 by pboonpro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	fork_init(t_set *set)
 {
 	int	i;
 
-	set->fork = malloc(sizeof(pthread_t) * set->log.num_phi);
+	set->fork = malloc(sizeof(pthread_mutex_t) * set->log.num_phi);
 	if (!set->fork)
 		return (0);
 	i = 0;
@@ -124,10 +124,8 @@ void	stop_check(t_set *set)
 
 void	eating(t_set *set, int i)
 {
-	printf("%ld %d is thinking\n", now(set->start), i);
 	if (set->death || pthread_mutex_lock(&set->fork[set->philo[i].l_fork]))
 		return ;
-	printf("%ld %d has taken a fork\n", now(set->start), i);
 	if (set->death || pthread_mutex_lock(&set->fork[set->philo[i].r_fork]))
 		return ;
 	printf("%ld %d has taken a fork\n", now(set->start), i);
@@ -166,6 +164,7 @@ void	*routine(void *se)
 		time_pass(set->log.time_to_sleep, set);
 		if (set->death)
 			return (NULL);
+		printf("%ld %d is thinking\n", now(set->start), i);
 	}
 	return (NULL);
 }
