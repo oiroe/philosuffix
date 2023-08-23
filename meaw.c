@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   meaw.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pboonpro <pboonpro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pboonpro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 15:24:05 by pboonpro          #+#    #+#             */
-/*   Updated: 2023/08/18 17:47:58 by pboonpro         ###   ########.fr       */
+/*   Updated: 2023/08/24 01:11:35 by pboonpro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,16 +104,16 @@ void	stop_check(t_set *set)
 	philo_full = 0;
 	while (!set->death && philo_full != set->log.num_phi)
 	{
-		if (set->philo[i].count_eat != set->log.max_eat \
+		if (set->philo[i].count_eat == set->log.max_eat \
 				&& set->log.max_eat != -1 && !set->philo[i].finish)
 		{
 			philo_full++;
 			set->philo[i].finish = 1;
 		}
-		if (now(set->philo[i].last_eat) > set->log.time_to_die)
+		if (now(set->philo[i].last_eat) >= set->log.time_to_die)
 		{
 			set->death = 1;
-			printf("YOU DIE\n");
+			printf("%ld %d died\n", now(set->start), i + 1);
 			return ;
 		}
 		usleep(100);
@@ -124,12 +124,14 @@ void	stop_check(t_set *set)
 
 void	eating(t_set *set, int i)
 {
+	printf("%ld %d is thinking\n", now(set->start), i + 1);
 	if (set->death || pthread_mutex_lock(&set->fork[set->philo[i].l_fork]))
 		return ;
+	printf("%ld %d has taken a fork\n", now(set->start), i + 1);
 	if (set->death || pthread_mutex_lock(&set->fork[set->philo[i].r_fork]))
 		return ;
-	printf("%ld %d has taken a fork\n", now(set->start), i);
-	printf("%ld %d is eating\n", now(set->start), i);
+	printf("%ld %d has taken a fork\n", now(set->start), i + 1);
+	printf("%ld %d is eating\n", now(set->start), i + 1);
 }
 
 void	unlock(t_set *set, int i)
@@ -140,12 +142,12 @@ void	unlock(t_set *set, int i)
 		return ;
 }
 
-void	*routine(void *se)
+void	*routine(void *old)
 {
 	t_set	*set;
 	int		i;
 
-	set = (t_set *)se;
+	set = (t_set *)old;
 	i = set->id;
 	set->philo[i].last_eat = set->start;
 	while (!set->death && (set->philo[i].count_eat < set->log.max_eat \
@@ -160,11 +162,10 @@ void	*routine(void *se)
 		set->philo[i].count_eat++;
 		if (set->philo[i].count_eat == set->log.max_eat)
 			return (NULL);
-		printf("%ld %d is sleeping\n", now(set->start), i);
+		printf("%ld %d is sleeping\n", now(set->start), i + 1);
 		time_pass(set->log.time_to_sleep, set);
 		if (set->death)
 			return (NULL);
-		printf("%ld %d is thinking\n", now(set->start), i);
 	}
 	return (NULL);
 }
@@ -188,6 +189,22 @@ int	start(t_set *set)
 	return (1);
 }
 
+void	free_all(t_set *set)
+{
+	int	i;
+
+	i = 0;
+	if (set->fork)
+	{
+		i = set->log.num_phi;
+		while (i >= 0)
+			pthread_mutex_destroy(&set->fork[i--]);
+		free(set->fork);
+	}
+	if (set->philo)
+		free(set->philo);
+}
+
 int	main(int ac, char **av)
 {
 	t_set	set;
@@ -200,9 +217,8 @@ int	main(int ac, char **av)
 		return (error_h());
 	if (!philo_init(&set))
 		return (error_h());
-	//printf("%d\n", set.philo[1].l_fork);
-	//printf("%d\n", set.philo[1].r_fork);
 	start(&set);
 	stop_check(&set);
+	free_all(&set);
 	return (0);
 }

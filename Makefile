@@ -6,7 +6,7 @@
 #    By: pboonpro <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/05 18:10:53 by pboonpro          #+#    #+#              #
-#    Updated: 2023/08/15 01:45:57 by pboonpro         ###   ########.fr        #
+#    Updated: 2023/08/24 01:10:32 by pboonpro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,14 +16,14 @@ SRC = meaw.c util.c time.c\
 
 OBJ = $(SRC:%.c=%.o)
 
-CFLAGS = -Wall -Wextra -Werror -g -pthread #-fsanitize=thread #-fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -pthread -g -fsanitize=address #-fsanitize=thread
 
 CC = cc
 
 all : $(NAME)
 
 $(NAME) : $(OBJ)
-	$(CC) $(OBJ) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
 
 %.o : %.c
 	$(CC) $(CFLAGS) -c $< -o $@
