@@ -14,7 +14,7 @@
 
 long	get_time(void)
 {
-	struct timeval	time;
+	t_time	time;
 
 	gettimeofday(&time, NULL);
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
@@ -22,14 +22,20 @@ long	get_time(void)
 
 long	now(long past)
 {
-	return (get_time() - past);
+	long	new;
+	t_time	time;
+
+	gettimeofday(&time, NULL);
+	new = (time.tv_sec * 1000) + (time.tv_usec / 1000);
+	return (new - past);
 }
 
-void	time_pass(long time, t_set *set)
+int	time_pass(long time, t_set *set)
 {
-	long	pass;
+	time_t	pass;
 
 	pass = get_time();
 	while (!set->death && (now(pass) < time))
-		usleep(44);
+		usleep(100);
+	return (set->death);
 }

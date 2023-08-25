@@ -3,16 +3,16 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pboonpro <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: pboonpro <pboonpro@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/05 18:10:53 by pboonpro          #+#    #+#              #
-#    Updated: 2023/08/24 01:10:32 by pboonpro         ###   ########.fr        #
+#    Updated: 2023/08/25 13:25:25 by pboonpro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
 
-SRC = meaw.c util.c time.c\
+SRC = meaw.c util.c time.c rotine.c setting.c checking.c\
 
 OBJ = $(SRC:%.c=%.o)
 
