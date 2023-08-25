@@ -6,7 +6,7 @@
 /*   By: pboonpro <pboonpro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 18:32:22 by pboonpro          #+#    #+#             */
-/*   Updated: 2023/08/25 13:26:02 by pboonpro         ###   ########.fr       */
+/*   Updated: 2023/08/25 14:38:06 by pboonpro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <sys/time.h>
-
-typedef struct timeval	t_time;
 
 typedef struct s_log
 {
@@ -61,7 +59,6 @@ long	get_time(void);
 long	now(long past);
 int		time_pass(long time, t_set *set);
 void	free_all(t_set *set);
-void	free_error(t_set *set);
 void	eating(t_set *set, int i);
 void	unlock(t_set *set, int i);
 void	*routine(void *old);
